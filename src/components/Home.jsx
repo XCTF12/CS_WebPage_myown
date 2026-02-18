@@ -1,24 +1,60 @@
 import { useEffect, useMemo, useState } from "react"
-import "./Home.css" 
+import "./Home.css"
 
 function Home() {
-
   const [news, setNews] = useState([])
   const [loadingNews, setLoadingNews] = useState(true)
   const [newsError, setNewsError] = useState(null)
 
+  
+  const alfredLinks = useMemo(
+    () => ({
+      explorePrograms: "https://www.alfred.edu/academics/",
+      viewProjects: "https://www.alfred.edu/academics/",
+      newsAll: "https://www.alfred.edu/about/news/",
+      programs: [
+        {
+          title: "Computer Science (BS/BA)",
+          desc: "Core programming, systems, algorithms, and software engineering.",
+          link: "https://www.alfred.edu/academics/",
+        },
+        {
+          title: "Data Science",
+          desc: "Analytics, visualization, statistics, and data-driven decision making.",
+          link: "https://www.alfred.edu/academics/",
+        },
+        {
+          title: "Cybersecurity",
+          desc: "Security concepts, networks, and real-world defensive thinking.",
+          link: "https://www.alfred.edu/academics/",
+        },
+        {
+          title: "AI & Machine Learning",
+          desc: "Models, training, evaluation, and modern ML applications.",
+          link: "https://www.alfred.edu/academics/",
+        },
+      ],
+      quickLinks: [
+        { label: "Faculty & Staff", link: "https://www.alfred.edu/academics/" },
+        { label: "Course Catalog", link: "https://www.alfred.edu/academics/" },
+        { label: "Internships & Careers", link: "https://www.alfred.edu/careers/" },
+        { label: "Research Opportunities", link: "https://www.alfred.edu/academics/" },
+      ],
+    }),
+    []
+  )
+
   const sampleNews = useMemo(
     () => [
-      { title: "Student projects featured in Spring Showcase", date: "Feb 2026", link: "#" },
-      { title: "New AI & Data Science electives now available", date: "Jan 2026", link: "#" },
-      { title: "Faculty talk: Cybersecurity in the real world", date: "Dec 2025", link: "#" },
+      { title: "Student projects featured in Spring Showcase", date: "Feb 2026", link: "https://www.alfred.edu/about/news/" },
+      { title: "New AI & Data Science electives now available", date: "Jan 2026", link: "https://www.alfred.edu/about/news/" },
+      { title: "Faculty talk: Cybersecurity in the real world", date: "Dec 2025", link: "https://www.alfred.edu/about/news/" },
     ],
     []
   )
 
   useEffect(() => {
-
-    const FEED_URL = "/api/alfred-news" 
+    const FEED_URL = "/api/alfred-news"
 
     async function loadNews() {
       try {
@@ -31,7 +67,7 @@ function Home() {
         const data = await res.json()
         setNews(Array.isArray(data) ? data : [])
       } catch (err) {
-        setNewsError(err.message)
+        setNewsError(err?.message || "Failed to fetch")
         setNews([])
       } finally {
         setLoadingNews(false)
@@ -52,10 +88,20 @@ function Home() {
           </p>
 
           <div className="homeCtas">
-            <a className="homeBtnPrimary" href="#" onClick={(e) => e.preventDefault()}>
+            <a
+              className="homeBtnPrimary"
+              href={alfredLinks.explorePrograms}
+              target="_blank"
+              rel="noreferrer"
+            >
               Explore Programs
             </a>
-            <a className="homeBtnSecondary" href="#" onClick={(e) => e.preventDefault()}>
+            <a
+              className="homeBtnSecondary"
+              href={alfredLinks.viewProjects}
+              target="_blank"
+              rel="noreferrer"
+            >
               View Projects
             </a>
           </div>
@@ -77,8 +123,6 @@ function Home() {
         </div>
 
         <div className="homeHeroMedia">
-          {/* Put any image in public/ and reference like this */}
-
           <div className="homeHeroMediaFallback">
             <div className="fallbackBox">
               <div className="fallbackTitle">Department Highlights</div>
@@ -98,23 +142,20 @@ function Home() {
         {/* LEFT: Program cards */}
         <div className="homeCard">
           <h2 className="homeCardTitle">Explore Programs</h2>
+
           <div className="cardGrid">
-            <div className="miniCard">
-              <h3>Computer Science (BS/BA)</h3>
-              <p>Core programming, systems, algorithms, and software engineering.</p>
-            </div>
-            <div className="miniCard">
-              <h3>Data Science</h3>
-              <p>Analytics, visualization, statistics, and data-driven decision making.</p>
-            </div>
-            <div className="miniCard">
-              <h3>Cybersecurity</h3>
-              <p>Security concepts, networks, and real-world defensive thinking.</p>
-            </div>
-            <div className="miniCard">
-              <h3>AI & Machine Learning</h3>
-              <p>Models, training, evaluation, and modern ML applications.</p>
-            </div>
+            {alfredLinks.programs.map((p) => (
+              <a
+                key={p.title}
+                className="miniCard"
+                href={p.link}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <h3>{p.title}</h3>
+                <p>{p.desc}</p>
+              </a>
+            ))}
           </div>
         </div>
 
@@ -122,7 +163,12 @@ function Home() {
         <div className="homeCard">
           <div className="homeCardHeaderRow">
             <h2 className="homeCardTitle">Alfred University News</h2>
-            <a className="homeCardLink" href="#" onClick={(e) => e.preventDefault()}>
+            <a
+              className="homeCardLink"
+              href={alfredLinks.newsAll}
+              target="_blank"
+              rel="noreferrer"
+            >
               View all
             </a>
           </div>
@@ -141,7 +187,7 @@ function Home() {
                 <a className="newsTitle" href={item.link} target="_blank" rel="noreferrer">
                   {item.title}
                 </a>
-                <div className="newsMeta">{item.date}</div>
+                <div className="newsMeta">{item.date || "Latest"}</div>
               </li>
             ))}
           </ul>
@@ -151,10 +197,11 @@ function Home() {
         <div className="homeCard">
           <h2 className="homeCardTitle">Quick Links</h2>
           <div className="quickLinks">
-            <a href="#" onClick={(e) => e.preventDefault()}>Faculty & Staff</a>
-            <a href="#" onClick={(e) => e.preventDefault()}>Course Catalog</a>
-            <a href="#" onClick={(e) => e.preventDefault()}>Internships & Careers</a>
-            <a href="#" onClick={(e) => e.preventDefault()}>Research Opportunities</a>
+            {alfredLinks.quickLinks.map((q) => (
+              <a key={q.label} href={q.link} target="_blank" rel="noreferrer">
+                {q.label}
+              </a>
+            ))}
           </div>
         </div>
 
@@ -165,7 +212,9 @@ function Home() {
             <div><strong>Department of Computer Science</strong></div>
             <div>Alfred University</div>
             <div>Alfred, NY 14802</div>
-            <div className="muted">Email: cs@alfred.edu (replace with real)</div>
+            <div className="muted">
+              Email: <a href="mailto:cs@alfred.edu">cs@alfred.edu</a>
+            </div>
           </div>
         </div>
       </section>
