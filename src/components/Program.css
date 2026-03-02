@@ -1,0 +1,63 @@
+.page {
+  width: 100%;
+  padding: 24px;
+}
+
+.pageTitle {
+  margin: 0 0 16px;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.snapshot {
+  border-radius: 14px;
+  overflow: hidden;
+  padding: 28px;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+}
+
+.snapGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 28px;
+}
+
+.snapCol {
+  padding-right: 18px;
+  border-right: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.noBorder {
+  border-right: none;
+  padding-right: 0;
+}
+
+.snapLabel {
+  font-weight: 700;
+  opacity: 0.95;
+  margin-bottom: 8px;
+}
+
+.snapValue {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.snapLink {
+  display: inline-block;
+  margin-top: 12px;
+  color: #fff;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.mt {
+  margin-top: 18px;
+}

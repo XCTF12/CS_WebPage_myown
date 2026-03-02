@@ -1,0 +1,161 @@
+/* =========================
+   ABOUT SECTION
+========================= */
+
+.about {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.aboutHero {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* Left text box */
+.aboutHeroText {
+  flex: 1.3;
+  background: rgba(0, 47, 108, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.aboutHeroText h2 {
+  margin: 0 0 12px 0;
+  font-size: 28px;
+  color: var(--alfred-blue);
+}
+
+.aboutHeroText p {
+  margin: 0;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 15px;
+}
+
+/* Buttons */
+.aboutHeroActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.aboutCta {
+  background: var(--alfred-blue);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.aboutCtaOutline {
+  background: transparent;
+  color: var(--alfred-blue);
+  border: 2px solid var(--alfred-blue);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* =========================
+   STATS SIDE CARDS
+========================= */
+
+.aboutStats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statCard {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 16px;
+  transition: transform 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-3px);
+}
+
+.statNum {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--alfred-blue);
+}
+
+.statLabel {
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.statSub {
+  margin-top: 6px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.4;
+}
+
+/* =========================
+   3-COLUMN GRID
+========================= */
+
+.aboutGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.aboutCard {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.aboutCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.aboutCard h3 {
+  margin: 0 0 12px 0;
+  color: var(--alfred-blue);
+}
+
+.aboutCard ul {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.6;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .aboutHero {
+    flex-direction: column;
+  }
+
+  .aboutGrid {
+    grid-template-columns: 1fr;
+  }
+}

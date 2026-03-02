@@ -1,12 +1,11 @@
-import { useEffect, useMemo, useState } from "react"
-import "./Home.css"
+import { useEffect, useMemo, useState } from "react";
+import "./Home.css";
 
-function Home() {
-  const [news, setNews] = useState([])
-  const [loadingNews, setLoadingNews] = useState(true)
-  const [newsError, setNewsError] = useState(null)
+function Home({ onExplorePrograms }) {
+  const [news, setNews] = useState([]);
+  const [loadingNews, setLoadingNews] = useState(true);
+  const [newsError, setNewsError] = useState(null);
 
-  
   const alfredLinks = useMemo(
     () => ({
       explorePrograms: "https://www.alfred.edu/academics/",
@@ -42,40 +41,52 @@ function Home() {
       ],
     }),
     []
-  )
+  );
 
   const sampleNews = useMemo(
     () => [
-      { title: "Student projects featured in Spring Showcase", date: "Feb 2026", link: "https://www.alfred.edu/about/news/" },
-      { title: "New AI & Data Science electives now available", date: "Jan 2026", link: "https://www.alfred.edu/about/news/" },
-      { title: "Faculty talk: Cybersecurity in the real world", date: "Dec 2025", link: "https://www.alfred.edu/about/news/" },
+      {
+        title: "Student projects featured in Spring Showcase",
+        date: "Feb 2026",
+        link: "https://www.alfred.edu/about/news/",
+      },
+      {
+        title: "New AI & Data Science electives now available",
+        date: "Jan 2026",
+        link: "https://www.alfred.edu/about/news/",
+      },
+      {
+        title: "Faculty talk: Cybersecurity in the real world",
+        date: "Dec 2025",
+        link: "https://www.alfred.edu/about/news/",
+      },
     ],
     []
-  )
+  );
 
   useEffect(() => {
-    const FEED_URL = "/api/alfred-news"
+    const FEED_URL = "http://localhost:5174/api/alfred-news"; 
 
     async function loadNews() {
       try {
-        setLoadingNews(true)
-        setNewsError(null)
+        setLoadingNews(true);
+        setNewsError(null);
 
-        const res = await fetch(FEED_URL)
-        if (!res.ok) throw new Error(`News fetch failed: ${res.status}`)
+        const res = await fetch(FEED_URL);
+        if (!res.ok) throw new Error(`News fetch failed: ${res.status}`);
 
-        const data = await res.json()
-        setNews(Array.isArray(data) ? data : [])
+        const data = await res.json();
+        setNews(Array.isArray(data) ? data : []);
       } catch (err) {
-        setNewsError(err?.message || "Failed to fetch")
-        setNews([])
+        setNewsError(err?.message || "Failed to fetch");
+        setNews([]);
       } finally {
-        setLoadingNews(false)
+        setLoadingNews(false);
       }
     }
 
-    loadNews()
-  }, [])
+    loadNews();
+  }, []);
 
   return (
     <div className="homeWrap">
@@ -84,18 +95,18 @@ function Home() {
         <div className="homeHeroText">
           <h1 className="homeTitle">Welcome to Computer Science</h1>
           <p className="homeSubtitle">
-            Build real software. Learn the fundamentals. Explore AI, cybersecurity, data, and web development.
+            Build real software. Learn the fundamentals. Explore AI, cybersecurity,
+            data, and web development.
           </p>
 
           <div className="homeCtas">
-            <a
+            <button
               className="homeBtnPrimary"
-              href={alfredLinks.explorePrograms}
-              target="_blank"
-              rel="noreferrer"
+              type="button"
+              onClick={onExplorePrograms}
             >
               Explore Programs
-            </a>
+            </button>
             <a
               className="homeBtnSecondary"
               href={alfredLinks.viewProjects}
@@ -137,9 +148,7 @@ function Home() {
         </div>
       </section>
 
-      {/* MAIN GRID */}
       <section className="homeGrid">
-        {/* LEFT: Program cards */}
         <div className="homeCard">
           <h2 className="homeCardTitle">Explore Programs</h2>
 
@@ -159,7 +168,6 @@ function Home() {
           </div>
         </div>
 
-        {/* RIGHT: News */}
         <div className="homeCard">
           <div className="homeCardHeaderRow">
             <h2 className="homeCardTitle">Alfred University News</h2>
@@ -184,7 +192,12 @@ function Home() {
           <ul className="newsList">
             {(news.length ? news : sampleNews).slice(0, 5).map((item, idx) => (
               <li key={idx} className="newsItem">
-                <a className="newsTitle" href={item.link} target="_blank" rel="noreferrer">
+                <a
+                  className="newsTitle"
+                  href={item.link}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {item.title}
                 </a>
                 <div className="newsMeta">{item.date || "Latest"}</div>
@@ -192,8 +205,6 @@ function Home() {
             ))}
           </ul>
         </div>
-
-        {/* Bottom: Quick links */}
         <div className="homeCard">
           <h2 className="homeCardTitle">Quick Links</h2>
           <div className="quickLinks">
@@ -205,11 +216,13 @@ function Home() {
           </div>
         </div>
 
-        {/* Bottom: Contact */}
+     
         <div className="homeCard">
           <h2 className="homeCardTitle">Contact</h2>
           <div className="contactBlock">
-            <div><strong>Department of Computer Science</strong></div>
+            <div>
+              <strong>Department of Computer Science</strong>
+            </div>
             <div>Alfred University</div>
             <div>Alfred, NY 14802</div>
             <div className="muted">
@@ -219,7 +232,7 @@ function Home() {
         </div>
       </section>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;
