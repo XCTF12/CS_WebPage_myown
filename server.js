@@ -4,7 +4,6 @@ import * as cheerio from "cheerio";
 
 const app = express();
 
-// Allow your Vite frontend to fetch from this server
 app.use(
   cors({
     origin: ["http://localhost:5173"],
@@ -12,7 +11,7 @@ app.use(
 );
 
 /**
- * Existing endpoint: Alfred News
+ * Alfred News
  */
 app.get("/api/alfred-news", async (req, res) => {
   try {
@@ -39,7 +38,6 @@ app.get("/api/alfred-news", async (req, res) => {
 
       if (!title || !href) return;
       if (!href.includes("/about/news/")) return;
-
       if (href.includes("category-listings")) return;
       if (href.includes("/studies/")) return;
       if (href.includes("/newsletters/")) return;
@@ -82,7 +80,9 @@ app.get("/api/alfred-news", async (req, res) => {
   }
 });
 
-
+/**
+ * CS Faculty/Staff
+ */
 app.get("/api/alfred-cs-staff", async (req, res) => {
   try {
     const url =
@@ -103,8 +103,6 @@ app.get("/api/alfred-cs-staff", async (req, res) => {
     const $ = cheerio.load(html);
 
     const peopleRaw = [];
-
-
     const candidates = $(".swiper-slide, .slide, .card, figure, article, a, div");
 
     candidates.each((_, el) => {
@@ -114,32 +112,29 @@ app.get("/api/alfred-cs-staff", async (req, res) => {
       const src = (img.attr("src") || "").trim();
       if (!src) return;
 
-   
-      let text = $el.text().replace(/\s+/g, " ").trim();
+      const text = $el.text().replace(/\s+/g, " ").trim();
       if (!text || text.length < 6) return;
 
-     
       const imageUrl = src.startsWith("http")
         ? src
         : `https://www.alfred.edu${src.startsWith("/") ? "" : "/"}${src}`;
 
-
       const href =
-        ($el.is("a") ? $el.attr("href") : $el.find("a").first().attr("href")) ||
-        "";
+        ($el.is("a") ? $el.attr("href") : $el.find("a").first().attr("href")) || "";
+
       const profileUrl = href
         ? href.startsWith("http")
           ? href
           : `https://www.alfred.edu${href.startsWith("/") ? "" : "/"}${href}`
         : "";
 
-  
       let name = "";
       let title = "";
 
       const profIndex = text.search(
         /\b(Professor|Lecturer|Instructor|Assistant Professor|Associate Professor)\b/i
       );
+
       if (profIndex > 0) {
         name = text.slice(0, profIndex).trim();
         title = text.slice(profIndex).trim();
@@ -152,25 +147,66 @@ app.get("/api/alfred-cs-staff", async (req, res) => {
       name = name.replace(/^[•\-–]+/, "").trim();
       title = title.replace(/^[•\-–]+/, "").trim();
 
-      peopleRaw.push({ name, title, imageUrl, profileUrl, label: text });
+      peopleRaw.push({
+        name,
+        title,
+        imageUrl,
+        profileUrl,
+        label: text,
+      });
     });
 
-    // De-dupe by imageUrl
-    const seen = new Set();
+    const seenImages = new Set();
+    const seenNames = new Set();
     const people = [];
 
     for (const p of peopleRaw) {
       if (!p.imageUrl) continue;
-      if (seen.has(p.imageUrl)) continue;
-      seen.add(p.imageUrl);
 
-      // Avoid obvious non-staff images (logos, icons)
+      const safeName = (p.name || "").trim();
+      const safeTitle = (p.title || "").trim();
+      const combined = `${safeName} ${safeTitle}`.toLowerCase();
       const lower = p.imageUrl.toLowerCase();
+      const nameKey = safeName.toLowerCase();
+
+      if (seenNames.has(nameKey)) continue;
+      if (seenImages.has(p.imageUrl)) continue;
+
       if (lower.includes("logo") || lower.includes("icon")) continue;
 
+      const badEntry =
+        safeName.length < 5 ||
+        safeName.length > 40 ||
+        safeTitle.length < 5 ||
+        safeTitle.length > 140 ||
+        safeName.split(" ").length < 2 ||
+        combined.includes("the study of information") ||
+        combined.includes("faculty / staff each") ||
+        combined.includes("facilities") ||
+        combined.includes("program snapshot") ||
+        combined.includes("contact us") ||
+        combined.includes("about academics") ||
+        combined.includes("college of liberal arts") ||
+        combined.includes("main campus") ||
+        combined.includes("we'll help you find the answers") ||
+        combined.includes("admissions") ||
+        combined.includes("student life") ||
+        combined.includes("quick links");
+
+      if (badEntry) continue;
+
+      const goodFaculty =
+        /professor|instructor|lecturer/.test(combined) &&
+        /computer science|mathematics/.test(combined);
+
+      if (!goodFaculty) continue;
+
+      seenNames.add(nameKey);
+      seenImages.add(p.imageUrl);
+
       people.push({
-        name: p.name || p.label,
-        title: p.title || "",
+        name: safeName,
+        title: safeTitle,
         imageUrl: p.imageUrl,
         profileUrl: p.profileUrl || "",
       });
@@ -184,7 +220,9 @@ app.get("/api/alfred-cs-staff", async (req, res) => {
   }
 });
 
-
+/**
+ * CS Program Snapshot
+ */
 app.get("/api/alfred-cs-snapshot", async (req, res) => {
   try {
     const url =
@@ -197,33 +235,34 @@ app.get("/api/alfred-cs-snapshot", async (req, res) => {
       },
     });
 
-    if (!r.ok) return res.status(r.status).json({ error: `Upstream ${r.status}` });
+    if (!r.ok) {
+      return res.status(r.status).json({ error: `Upstream ${r.status}` });
+    }
 
     const html = await r.text();
     const $ = cheerio.load(html);
-
 
     const h = $("h2, h3")
       .filter((_, el) => $(el).text().trim().toLowerCase() === "program snapshot")
       .first();
 
-    if (!h.length) return res.json({ error: "Program Snapshot section not found" });
+    if (!h.length) {
+      return res.json({ error: "Program Snapshot section not found" });
+    }
 
     const section = h.closest("section, div");
 
     const pick = (label) => {
       const node = section
         .find("*")
-        .filter(
-          (_, el) => $(el).text().trim().toLowerCase() === label.toLowerCase()
-        )
+        .filter((_, el) => $(el).text().trim().toLowerCase() === label.toLowerCase())
         .first();
 
       if (!node.length) return "";
+
       const container = node.closest("div, li, p");
       const text = container.text().replace(/\s+/g, " ").trim();
-      const out = text.replace(new RegExp(label, "i"), "").trim();
-      return out;
+      return text.replace(new RegExp(label, "i"), "").trim();
     };
 
     const schoolDivision = pick("School/Division");
@@ -232,7 +271,6 @@ app.get("/api/alfred-cs-snapshot", async (req, res) => {
     const doubleMajor = pick("Double Major");
     const minor = pick("Minor");
 
-    // Contact block
     const contactLabel = section
       .find("*")
       .filter((_, el) => $(el).text().trim().toLowerCase() === "program contact")
@@ -247,15 +285,9 @@ app.get("/api/alfred-cs-snapshot", async (req, res) => {
 
       contactName =
         contactContainer.find("a").first().text().replace(/\s+/g, " ").trim() ||
-        contactContainer
-          .find("strong")
-          .first()
-          .text()
-          .replace(/\s+/g, " ")
-          .trim();
+        contactContainer.find("strong").first().text().replace(/\s+/g, " ").trim();
 
-      const emailHref =
-        contactContainer.find("a[href^='mailto:']").attr("href") || "";
+      const emailHref = contactContainer.find("a[href^='mailto:']").attr("href") || "";
       contactEmail = emailHref.replace("mailto:", "").trim();
 
       const telHref = contactContainer.find("a[href^='tel:']").attr("href") || "";
@@ -268,7 +300,6 @@ app.get("/api/alfred-cs-snapshot", async (req, res) => {
       }
     }
 
-  
     const img = section.find("img").first().attr("src") || "";
     const imageUrl = img
       ? img.startsWith("http")
@@ -295,10 +326,13 @@ app.get("/api/alfred-cs-snapshot", async (req, res) => {
   }
 });
 
-
+/**
+ * Image proxy
+ */
 app.get("/api/img", async (req, res) => {
   try {
     const url = req.query.url;
+
     if (!url || typeof url !== "string") {
       return res.status(400).send("Missing url");
     }
@@ -311,7 +345,9 @@ app.get("/api/img", async (req, res) => {
       },
     });
 
-    if (!r.ok) return res.status(r.status).send("Upstream image error");
+    if (!r.ok) {
+      return res.status(r.status).send("Upstream image error");
+    }
 
     res.setHeader("Content-Type", r.headers.get("content-type") || "image/jpeg");
 
