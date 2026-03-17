@@ -8,7 +8,6 @@ function Home({ onExplorePrograms }) {
 
   const alfredLinks = useMemo(
     () => ({
-      explorePrograms: "https://www.alfred.edu/academics/",
       viewProjects: "https://www.alfred.edu/academics/",
       newsAll: "https://www.alfred.edu/about/news/",
       programs: [
@@ -65,7 +64,7 @@ function Home({ onExplorePrograms }) {
   );
 
   useEffect(() => {
-    const FEED_URL = "http://localhost:5174/api/alfred-news"; 
+    const FEED_URL = "http://localhost:5174/api/alfred-news";
 
     async function loadNews() {
       try {
@@ -89,144 +88,243 @@ function Home({ onExplorePrograms }) {
   }, []);
 
   return (
-    <div className="homeWrap">
+    <div className="homePageFull">
       {/* HERO */}
-      <section className="homeHero">
-        <div className="homeHeroText">
-          <h1 className="homeTitle">Welcome to Computer Science</h1>
-          <p className="homeSubtitle">
-            Build real software. Learn the fundamentals. Explore AI, cybersecurity,
-            data, and web development.
-          </p>
+      <section className="heroSectionFull">
+        <div className="heroGlow heroGlowOne"></div>
+        <div className="heroGlow heroGlowTwo"></div>
 
-          <div className="homeCtas">
-            <button
-              className="homeBtnPrimary"
-              type="button"
-              onClick={onExplorePrograms}
-            >
-              Explore Programs
-            </button>
-            <a
-              className="homeBtnSecondary"
-              href={alfredLinks.viewProjects}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View Projects
-            </a>
-          </div>
+        <div className="homeInner">
+          <div className="heroContentFull">
+            <div className="heroLeft">
+              <p className="heroEyebrow">Department of Computer Science</p>
 
-          <div className="homeStats">
-            <div className="statCard">
-              <div className="statNum">Hands-on</div>
-              <div className="statLabel">projects & labs</div>
-            </div>
-            <div className="statCard">
-              <div className="statNum">Career</div>
-              <div className="statLabel">ready skills</div>
-            </div>
-            <div className="statCard">
-              <div className="statNum">Support</div>
-              <div className="statLabel">faculty mentoring</div>
-            </div>
-          </div>
-        </div>
+              <h1 className="heroTitle">
+                Computer
+                <br />
+                Science
+              </h1>
 
-        <div className="homeHeroMedia">
-          <div className="homeHeroMediaFallback">
-            <div className="fallbackBox">
-              <div className="fallbackTitle">Department Highlights</div>
-              <ul className="fallbackList">
-                <li>Software Engineering</li>
-                <li>AI / Machine Learning</li>
-                <li>Cybersecurity</li>
-                <li>Data Science</li>
-              </ul>
+              <p className="heroText">
+                Explore innovation, research, programming, and problem-solving
+                at Alfred University. Build strong foundations in software,
+                systems, cybersecurity, AI, and data.
+              </p>
+
+              <div className="heroButtons">
+                <button
+                  className="heroBtnPrimary"
+                  type="button"
+                  onClick={onExplorePrograms}
+                >
+                  Explore Our Programs
+                </button>
+
+                <a
+                  className="heroBtnSecondary"
+                  href={alfredLinks.viewProjects}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View Projects
+                </a>
+              </div>
+
+              <div className="heroMiniStats">
+                <div className="heroStatCard">
+                  <span className="heroStatTitle">Hands-on</span>
+                  <span className="heroStatText">projects & labs</span>
+                </div>
+
+                <div className="heroStatCard">
+                  <span className="heroStatTitle">Career</span>
+                  <span className="heroStatText">ready skills</span>
+                </div>
+
+                <div className="heroStatCard">
+                  <span className="heroStatTitle">Support</span>
+                  <span className="heroStatText">faculty mentoring</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="heroRight">
+              <div className="heroVisualCard mainVisual">
+                <img
+                  src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80"
+                  alt="Computer Science workspace"
+                />
+              </div>
+
+              <div className="floatingCard floatingTop">
+                <h3>Alfred CS Snapshot</h3>
+                <p>Software • Systems • AI • Cybersecurity</p>
+              </div>
+
+              <div className="floatingCard floatingBottom">
+                <h3>Interactive Learning</h3>
+                <p>Projects, labs, research, and faculty support</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="homeGrid">
-        <div className="homeCard">
-          <h2 className="homeCardTitle">Explore Programs</h2>
+      {/* FEATURE CARDS */}
+      <section className="featureSection">
+        <div className="homeInner">
+          <div className="featureCards">
+            <div className="featureCard">
+              <div className="featureImage featureNews"></div>
+              <div className="featureBody">
+                <h3>Latest News</h3>
+                <p>
+                  Stay updated with program highlights, student work, and
+                  university announcements.
+                </p>
+              </div>
+            </div>
 
-          <div className="cardGrid">
-            {alfredLinks.programs.map((p) => (
-              <a
-                key={p.title}
-                className="miniCard"
-                href={p.link}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <h3>{p.title}</h3>
-                <p>{p.desc}</p>
-              </a>
-            ))}
+            <div className="featureCard">
+              <div className="featureImage featureFaculty"></div>
+              <div className="featureBody">
+                <h3>Our Faculty</h3>
+                <p>
+                  Meet the professors and staff helping students grow in
+                  computer science.
+                </p>
+              </div>
+            </div>
+
+            <div className="featureCard">
+              <div className="featureImage featureEvents"></div>
+              <div className="featureBody">
+                <h3>Events & Projects</h3>
+                <p>
+                  Discover events, research projects, and opportunities across
+                  the department.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div className="homeCard">
-          <div className="homeCardHeaderRow">
-            <h2 className="homeCardTitle">Alfred University News</h2>
-            <a
-              className="homeCardLink"
-              href={alfredLinks.newsAll}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View all
-            </a>
-          </div>
+      {/* BOTTOM GRID */}
+      <section className="contentSection">
+        <div className="homeInner">
+          <div className="homeBottomGrid">
+            <div className="glassCard glassCardPrograms">
+              <div className="sectionTopRow">
+                <div>
+                  <p className="miniEyebrow">Academic Paths</p>
+                  <h2>Explore Programs</h2>
+                </div>
+              </div>
 
-          {loadingNews && <p className="muted">Loading news…</p>}
+              <div className="programGrid">
+                {alfredLinks.programs.map((p) => (
+                  <a
+                    key={p.title}
+                    className="programCard"
+                    href={p.link}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <div className="programIcon">✦</div>
+                    <div>
+                      <h3>{p.title}</h3>
+                      <p>{p.desc}</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
 
-          {!loadingNews && newsError && (
-            <p className="muted">
-              Couldn’t load live news yet ({newsError}). Showing sample items for now.
-            </p>
-          )}
-
-          <ul className="newsList">
-            {(news.length ? news : sampleNews).slice(0, 5).map((item, idx) => (
-              <li key={idx} className="newsItem">
+            <div className="glassCard glassCardNews">
+              <div className="sectionTopRow">
+                <div>
+                  <p className="miniEyebrow">Latest Updates</p>
+                  <h2>Alfred University News</h2>
+                </div>
                 <a
-                  className="newsTitle"
-                  href={item.link}
+                  className="sectionLink"
+                  href={alfredLinks.newsAll}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {item.title}
+                  View all
                 </a>
-                <div className="newsMeta">{item.date || "Latest"}</div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="homeCard">
-          <h2 className="homeCardTitle">Quick Links</h2>
-          <div className="quickLinks">
-            {alfredLinks.quickLinks.map((q) => (
-              <a key={q.label} href={q.link} target="_blank" rel="noreferrer">
-                {q.label}
-              </a>
-            ))}
-          </div>
-        </div>
+              </div>
 
-     
-        <div className="homeCard">
-          <h2 className="homeCardTitle">Contact</h2>
-          <div className="contactBlock">
-            <div>
-              <strong>Department of Computer Science</strong>
+              {loadingNews && <p className="mutedLight">Loading news…</p>}
+
+              {!loadingNews && newsError && (
+                <p className="mutedLight">
+                  Couldn’t load live news ({newsError}). Showing sample items instead.
+                </p>
+              )}
+
+              <ul className="newsListModern">
+                {(news.length ? news : sampleNews).slice(0, 5).map((item, idx) => (
+                  <li key={idx} className="newsRow">
+                    <span className="newsDot"></span>
+                    <div className="newsContent">
+                      <a
+                        className="newsRowTitle"
+                        href={item.link}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {item.title}
+                      </a>
+                      <span className="newsRowDate">{item.date || "Latest"}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div>Alfred University</div>
-            <div>Alfred, NY 14802</div>
-            <div className="muted">
-              Email: <a href="mailto:cs@alfred.edu">cs@alfred.edu</a>
+
+            <div className="glassCard infoPanel">
+              <div className="panelHeader">
+                <p className="miniEyebrow">Resources</p>
+                <h2>Quick Links</h2>
+              </div>
+
+              <div className="quickLinksModern">
+                {alfredLinks.quickLinks.map((q) => (
+                  <a key={q.label} href={q.link} target="_blank" rel="noreferrer">
+                    <span>{q.label}</span>
+                    <span className="arrowMark">→</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="glassCard infoPanel">
+              <div className="panelHeader">
+                <p className="miniEyebrow">Connect</p>
+                <h2>Contact</h2>
+              </div>
+
+              <div className="contactModern">
+                <div className="contactRow">
+                  <span className="contactLabel">Department</span>
+                  <span>Computer Science</span>
+                </div>
+                <div className="contactRow">
+                  <span className="contactLabel">School</span>
+                  <span>Alfred University</span>
+                </div>
+                <div className="contactRow">
+                  <span className="contactLabel">Location</span>
+                  <span>Alfred, NY 14802</span>
+                </div>
+                <div className="contactRow">
+                  <span className="contactLabel">Email</span>
+                  <a href="mailto:cs@alfred.edu">cs@alfred.edu</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

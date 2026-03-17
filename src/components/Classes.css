@@ -1,0 +1,185 @@
+.classesPage {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+  box-sizing: border-box;
+}
+
+.classesHero {
+  margin-bottom: 28px;
+}
+
+.classesEyebrow {
+  margin: 0 0 8px;
+  color: #0b3a82;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.classesTitle {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  color: #111827;
+}
+
+.classesSubtitle {
+  margin: 12px 0 0;
+  max-width: 760px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+.classesSection {
+  margin-top: 30px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  font-size: 1.7rem;
+  color: #111827;
+}
+
+.creditBadge {
+  background: #0b3a82;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.sectionText {
+  margin: 0 0 16px;
+  max-width: 840px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.sectionNote {
+  margin: 14px 0 0;
+  color: #6b7280;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.tableCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+.classesTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.classesTable thead {
+  background: #f8fafc;
+}
+
+.classesTable th,
+.classesTable td {
+  padding: 16px 18px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.classesTable th {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.classesTable td {
+  font-size: 0.96rem;
+  color: #374151;
+}
+
+.classesTable tbody tr:hover {
+  background: #f9fbff;
+}
+
+.classesTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.infoGrid {
+  margin-top: 34px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.infoCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+.infoCard h3 {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+  color: #111827;
+}
+
+.infoCard p {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.infoNumber {
+  margin-top: 18px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0b3a82;
+}
+
+.requirementList {
+  margin: 14px 0 0;
+  padding-left: 20px;
+  color: #374151;
+  line-height: 1.8;
+}
+
+@media (max-width: 900px) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .classesPage {
+    padding: 22px 14px 34px;
+  }
+
+  .tableCard {
+    overflow-x: auto;
+  }
+
+  .classesTable {
+    min-width: 650px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.4rem;
+  }
+}

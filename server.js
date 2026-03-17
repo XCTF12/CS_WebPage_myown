@@ -327,6 +327,103 @@ app.get("/api/alfred-cs-snapshot", async (req, res) => {
 });
 
 /**
+ * CS Classes / Graduation Requirements
+ */
+app.get("/api/alfred-cs-classes", async (req, res) => {
+  try {
+    const url =
+      "https://undergraduatecatalog.alfred.edu/mathematics-computer-science/ba/computer-science-ba/";
+
+    const r = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        Accept: "text/html",
+      },
+    });
+
+    if (!r.ok) {
+      return res.status(r.status).json({ error: `Upstream ${r.status}` });
+    }
+
+    const html = await r.text();
+    const $ = cheerio.load(html);
+
+    const coreCourses = [];
+    const electiveCourses = [];
+
+    const clean = (value) => value.replace(/\s+/g, " ").trim();
+
+    const extractRowsFromTable = ($table, output) => {
+      $table.find("tbody tr").each((_, row) => {
+        const tds = $(row).find("td");
+        if (tds.length < 2) return;
+
+        const code = clean($(tds[0]).text());
+        const title = clean($(tds[1]).text());
+        const credits = tds.length >= 3 ? clean($(tds[2]).text()) : "";
+
+        if (!code || !title) return;
+        if (/sub-total/i.test(code)) return;
+
+        output.push({ code, title, credits });
+      });
+    };
+
+    const coreHeading = $("h1, h2, h3")
+      .filter((_, el) => clean($(el).text()).toLowerCase().includes("core requirements"))
+      .first();
+
+    if (coreHeading.length) {
+      let node = coreHeading.next();
+      while (node.length) {
+        if (/^h1$|^h2$|^h3$/i.test(node[0].tagName || "")) break;
+
+        if (node.is("table")) {
+          extractRowsFromTable(node, coreCourses);
+        } else {
+          node.find("table").each((_, table) => {
+            extractRowsFromTable($(table), coreCourses);
+          });
+        }
+
+        node = node.next();
+      }
+    }
+
+    const electiveHeading = $("h1, h2, h3")
+      .filter((_, el) =>
+        clean($(el).text()).toLowerCase().includes("elective requirements")
+      )
+      .first();
+
+    if (electiveHeading.length) {
+      let node = electiveHeading.next();
+      while (node.length) {
+        if (/^h1$|^h2$|^h3$/i.test(node[0].tagName || "")) break;
+
+        if (node.is("table")) {
+          extractRowsFromTable(node, electiveCourses);
+        } else {
+          node.find("table").each((_, table) => {
+            extractRowsFromTable($(table), electiveCourses);
+          });
+        }
+
+        node = node.next();
+      }
+    }
+
+    return res.json({
+      sourceUrl: url,
+      coreCourses,
+      electiveCourses,
+    });
+  } catch (e) {
+    return res.status(500).json({ error: e?.message || "Server error" });
+  }
+});
+
+/**
  * Image proxy
  */
 app.get("/api/img", async (req, res) => {
@@ -363,4 +460,5 @@ app.listen(5174, () => {
   console.log("Test news:     http://localhost:5174/api/alfred-news");
   console.log("Test staff:    http://localhost:5174/api/alfred-cs-staff");
   console.log("Test snapshot: http://localhost:5174/api/alfred-cs-snapshot");
+  console.log("Test classes:  http://localhost:5174/api/alfred-cs-classes");
 });
